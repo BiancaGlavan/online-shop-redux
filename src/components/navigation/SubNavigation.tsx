@@ -1,5 +1,6 @@
 import { styled } from "@mui/material/styles";
-import { Link } from "react-router-dom";
+import { useEffect, useState } from "react";
+import { Link, useLocation } from "react-router-dom";
 import { ICategory } from "../../features/apiSlice";
 
 interface IPropsSubNavigation {
@@ -17,13 +18,32 @@ const StyledSubNavigation = styled('div')`
   .category{
     margin: 0 10px;
     font-weight: 500;
+
+    &.active {
+      color: ${props => props.theme.palette.primary.main};
+    }
   }
 `;
 
 const SubNavigation = ({ categories }: IPropsSubNavigation) => {
+
+  const location = useLocation();
+  
+  const [activeCategoryId, setActiveCategoryId] = useState(0);
+  
+  useEffect(() => {
+    if(location.pathname.includes('/categories/')) {
+      let id = location.pathname.replace('/categories/', '');
+      setActiveCategoryId(parseInt(id));
+    } else {
+      setActiveCategoryId(0);
+    }
+
+  }, [location.pathname]);
+
   return (
     <StyledSubNavigation>
-      {categories.map((category, idx) => <Link className="category" key={category.id} to={'/categories/' + category.id}>{category.name}</Link>)}
+      {categories.map((category, idx) => <Link className={`category ${category.id === activeCategoryId ? 'active' : ''}`} key={category.id} to={'/categories/' + category.id}>{category.name}</Link>)}
     </StyledSubNavigation>
   )
 }

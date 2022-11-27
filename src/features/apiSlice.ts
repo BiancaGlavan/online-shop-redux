@@ -21,6 +21,11 @@ interface ILoginResponse {
     access_token: string;
 }
 
+interface IPagination {
+    offset: number;
+    limit: number;
+}
+
 export const api = createApi({
     reducerPath: 'api',
     baseQuery: fetchBaseQuery({
@@ -38,8 +43,8 @@ export const api = createApi({
         getProducts: builder.query<IProduct[], void>({
             query: () => 'products',
         }),
-        getProductById: builder.query<IProduct, number>({
-            query: (productId: number) => `products/${productId}`,
+        getProductById: builder.query<IProduct, number | string>({
+            query: (productId: number | string) => `products/${productId}`,
         }),
         createProduct: builder.mutation<IProduct, { data: IProduct }>({
             query: ({ data }) => ({
@@ -51,8 +56,8 @@ export const api = createApi({
         getCategories: builder.query<ICategory[], void>({
             query: () => 'categories',
         }),
-        getProductsByCategory: builder.query<ICategory[], number>({
-            query: (categoryId: number) => `categories/${categoryId}/products`,
+        getProductsByCategory: builder.query<IProduct[], number | string>({
+            query: (categoryId: number | string) => `categories/${categoryId}/products`,
         }),
         getMyProfile: builder.query<IUser, any>({
             query: () => 'auth/profile',
@@ -71,6 +76,7 @@ export const api = createApi({
                 body: data,
             })
         }),
+       
     }),
 });
 
@@ -83,6 +89,7 @@ export const {
     useLoginUserMutation,
     useRegisterUserMutation,
     useGetMyProfileQuery,
+    
 } = api;
 
 export default api;

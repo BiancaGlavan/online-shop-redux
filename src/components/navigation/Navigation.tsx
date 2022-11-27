@@ -6,6 +6,7 @@ import { Link, useNavigate } from "react-router-dom";
 import { useAppDispatch, useAppSelector } from "../../app/hooks";
 import { useGetCategoriesQuery, useGetMyProfileQuery } from "../../features/apiSlice";
 import { logout, setUser } from "../../features/authSlice";
+import CartDropdown from "../CartDropdown";
 import UserDropdown from "../UserDropdown";
 import MobileSidebar from "./MobileSidebar";
 import SubNavigation from "./SubNavigation";
@@ -43,11 +44,12 @@ const StyledNavigation = styled('div')`
 
 const Navigation = () => {
     // const { data: products, isLoading: productsLoading, isError: productsErr } = useGetProductsByCategoryQuery(2);
-    const {data: categories, isLoading, isError} = useGetCategoriesQuery();
-    
-    const authState = useAppSelector(state => state.auth);
+    const { data: categories, isLoading, isError } = useGetCategoriesQuery();
 
-    const {data: userProfile, isSuccess} = useGetMyProfileQuery('', {skip: !authState.isAuth});
+    const authState = useAppSelector(state => state.auth);
+    const cartState = useAppSelector(state => state.cart);
+
+    const { data: userProfile, isSuccess } = useGetMyProfileQuery('', { skip: !authState.isAuth });
     const dispatch = useAppDispatch();
     const theme = useTheme();
     const isMobile = useMediaQuery(theme.breakpoints.down('md'));
@@ -55,7 +57,7 @@ const Navigation = () => {
     const [mobileOpen, setMobileOpen] = useState(false);
 
     const navigate = useNavigate();
-    
+
     const handleDrawerToggle = () => {
         setMobileOpen(!mobileOpen);
     };
@@ -67,14 +69,14 @@ const Navigation = () => {
     }
 
     useEffect(() => {
-        if(isSuccess) {
+        if (isSuccess) {
             dispatch(setUser(userProfile));
         }
     }, [isSuccess])
 
     return (
         <StyledNavigation>
-            <AppBar position="static">
+            <AppBar position="fixed">
                 <Toolbar disableGutters>
                     {isMobile && <Box>
                         <IconButton onClick={handleDrawerToggle}>
@@ -82,9 +84,11 @@ const Navigation = () => {
                         </IconButton>
                     </Box>}
                     <Box className="logo">
-                        <Typography variant="h6">
-                            BI.ANCA
-                        </Typography>
+                        <Link to={'/'}>
+                            <Typography variant="h6">
+                                BI.ANCA
+                            </Typography>
+                        </Link>
                     </Box>
                     {!isMobile && !authState.isAuth && <Box className="nav-links">
                         <Link to={'/register'}>
@@ -98,21 +102,11 @@ const Navigation = () => {
                             </MenuItem>
                         </Link>
                     </Box>}
-                    <Box>
-                        <IconButton
-                            size="large"
-                            aria-label="show 17 new notifications"
-                            color="inherit"
-                        >
-                            <Badge badgeContent={17} color="error">
-                                <ShoppingCartOutlined />
-                            </Badge>
-                        </IconButton>
-                    </Box>
-                    {authState.isAuth && authState.user && <UserDropdown user={authState.user} handleLogout={handleLogout}/>}
+                    <CartDropdown />
+                    {authState.isAuth && authState.user && <UserDropdown user={authState.user} handleLogout={handleLogout} />}
                 </Toolbar>
                 <Divider />
-                {!isMobile && <SubNavigation categories={categories || []}/>}
+                {!isMobile && <SubNavigation categories={categories || []} />}
             </AppBar>
             <MobileSidebar handleToggle={handleDrawerToggle} isOpen={mobileOpen} categories={categories || []} />
         </StyledNavigation>

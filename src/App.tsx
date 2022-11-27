@@ -1,7 +1,7 @@
 import './App.css'
 import { useGetProductsByCategoryQuery } from './features/apiSlice';
 import { createTheme, ThemeProvider, styled } from '@mui/material/styles';
-import { Button, CssBaseline } from '@mui/material';
+import { Button, Container, CssBaseline } from '@mui/material';
 import Navigation from './components/navigation/Navigation';
 import { Route, Routes } from 'react-router-dom';
 import HomePage from './pages/HomePage';
@@ -27,6 +27,9 @@ function App() {
     typography: {
       fontFamily: 'Roboto'
     },
+    shape: {
+      borderRadius: 4
+    }
   });
 
 
@@ -35,15 +38,18 @@ function App() {
       <CssBaseline />
       <div className="App">
         <Navigation />
-        <Routes>
-          <Route path='/' element={<HomePage />} />
-          <Route path='/products/:id' element={<SingleProductPage />} />
-          <Route path='/login' element={<LoginPage />} />
-          <Route path='/register' element={<RegisterPage />} />
-          <Route path='/shopping-cart' element={<CartPage />} />
-          <Route path='/categories/:id' element={<CategoryPage />} />
-          <Route path='/profile' element={<ProfilePage />} />
-        </Routes>
+        <Container sx={{ paddingTop: '150px' }}>
+          <Routes>
+            <Route path='/' element={<HomePage />} />
+            <Route path='/products/:id' element={<SingleProductPage />} />
+            <Route path='/login' element={<LoginPage />} />
+            <Route path='/register' element={<RegisterPage />} />
+            <Route path='/shopping-cart' element={<CartPage />} />
+            <Route path='/categories/:id' element={<CategoryPage />} />
+            <Route path='/profile' element={<ProfilePage />} />
+          </Routes>
+        </Container>
+
       </div>
     </ThemeProvider>
 
