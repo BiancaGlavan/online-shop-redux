@@ -18,6 +18,7 @@ const StyledSubNavigation = styled('div')`
   .category{
     margin: 0 10px;
     font-weight: 500;
+    flex-shrink: 0;
 
     &.active {
       color: ${props => props.theme.palette.primary.main};

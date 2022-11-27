@@ -2,15 +2,26 @@ import { configureStore, ThunkAction, Action } from '@reduxjs/toolkit';
 import { api } from '../features/apiSlice';
 import authReducer from '../features/authSlice';
 import cartSlice from '../features/cartSlice';
+import storage from 'redux-persist/lib/storage';
+import { persistReducer } from 'redux-persist';
 
+const persistConfig = {
+    key: 'root',
+    version: 1,
+    storage: storage
+};
+
+const persistedCart = persistReducer(persistConfig, cartSlice);
 
 export const store = configureStore({
     reducer: {
         auth: authReducer,
         [api.reducerPath]: api.reducer,
-        cart: cartSlice,
+        cart: persistedCart,
     },
-    middleware: (getDefaultMiddleware) => getDefaultMiddleware().concat(api.middleware),
+    middleware: (getDefaultMiddleware) => getDefaultMiddleware({
+        serializableCheck: false,
+      }).concat(api.middleware),
 });
 
 export type AppDispatch = typeof store.dispatch;
