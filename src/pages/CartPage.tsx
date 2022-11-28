@@ -3,7 +3,7 @@ import { styled } from "@mui/material/styles";
 import { useAppDispatch, useAppSelector } from "../app/hooks";
 import CartProduct from "../components/product/CartProduct";
 import { IProduct } from "../features/apiSlice";
-import { removeProduct } from "../features/cartSlice";
+import { decrement, increment, removeProduct } from "../features/cartSlice";
 
 const StyledCartPage = styled('div')`
   .cart-product {
@@ -44,27 +44,31 @@ const CartPage = () => {
     dispatch(removeProduct(prod));
   }
 
-  const calcTotal = () => {
-    let res = 0;
-
-    cartState.products.forEach(product => {
-      res = res + product.price;
-    });
-
-    return res;
+  const handleIncrement = (prod: IProduct) => {
+    dispatch(increment(prod));
   }
+  const handleDecrement = (prod: IProduct) => {
+    dispatch(decrement(prod));
+  }
+
 
   return (
     <StyledCartPage>
       <Box className="cart-product">
-        {cartState.products.map((product, idx) =>
-          <CartProduct key={product.id} product={product} handleDeleteProduct={handleRemoveProduct} />)}
+        {cartState.items.map((item, idx) =>
+          <CartProduct quantity={item.quantity} 
+          key={item.product.id} 
+          product={item.product} 
+          handleDeleteProduct={handleRemoveProduct}
+          onIncrease={handleIncrement}
+          onDecrease={handleDecrement}
+          />)}
       </Box>
       <Paper className="finish-order-container">
         <Typography variant="h6">Order</Typography>
         <Box className="order-details">
           <Typography variant="h6">Total:</Typography>
-          <Typography variant="h6">${calcTotal()}</Typography>
+          <Typography variant="h6">${cartState.totalPrice}</Typography>
         </Box>
         <Button variant="contained">Place Order</Button>
       </Paper>

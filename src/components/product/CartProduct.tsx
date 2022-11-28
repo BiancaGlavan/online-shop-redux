@@ -10,6 +10,9 @@ import AddIcon from '@mui/icons-material/Add';
 interface IPropsCartProduct {
   product: IProduct;
   handleDeleteProduct: (product: IProduct) => void;
+  quantity: number;
+  onIncrease: (product: IProduct) => void;
+  onDecrease: (product: IProduct) => void;
 }
 
 const StyledCartProduct = styled(Paper)`
@@ -59,7 +62,7 @@ const StyledCartProduct = styled(Paper)`
   }
 `;
 
-const CartProduct = ({ product, handleDeleteProduct }: IPropsCartProduct) => {
+const CartProduct = ({ product, handleDeleteProduct, quantity, onIncrease, onDecrease }: IPropsCartProduct) => {
 
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
@@ -76,11 +79,11 @@ const CartProduct = ({ product, handleDeleteProduct }: IPropsCartProduct) => {
           <Typography variant="body2">${product.price}</Typography>
         </Box>
         <Box className="product-quantity">
-          <IconButton>
+          <IconButton onClick={() => onDecrease(product)}>
             <RemoveIcon />
           </IconButton>
-          <Typography variant="subtitle2">1</Typography>
-          <IconButton>
+          <Typography variant="subtitle2">{quantity}</Typography>
+          <IconButton onClick={() => onIncrease(product)}>
             <AddIcon />
           </IconButton>
           <IconButton className="delete-btn" onClick={() => handleDeleteProduct(product)}>
