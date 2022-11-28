@@ -1,7 +1,8 @@
 import { Box, Divider, Drawer, Typography } from "@mui/material"
-import { Link } from "react-router-dom";
+import { Link, useLocation } from "react-router-dom";
 import { ICategory } from "../../features/apiSlice";
 import { styled } from "@mui/material/styles";
+import { useEffect, useState } from "react";
 
 interface IPropsMobileSidebar {
   isOpen: boolean;
@@ -24,10 +25,29 @@ const StyledMobileSideBar = styled(Drawer)`
   }
   .category {
     margin-bottom: 40px;
+
+    &.active {
+      color: ${props => props.theme.palette.primary.main};
+    }
   }
 `;
 
 const MobileSidebar = ({ isOpen, handleToggle, categories }: IPropsMobileSidebar) => {
+
+  const location = useLocation();
+  
+  const [activeCategoryId, setActiveCategoryId] = useState(0);
+  
+  useEffect(() => {
+    if(location.pathname.includes('/categories/')) {
+      let id = location.pathname.replace('/categories/', '');
+      setActiveCategoryId(parseInt(id));
+    } else {
+      setActiveCategoryId(0);
+    }
+
+  }, [location.pathname]);
+
   return (
     <StyledMobileSideBar
       variant="temporary"
@@ -48,7 +68,7 @@ const MobileSidebar = ({ isOpen, handleToggle, categories }: IPropsMobileSidebar
       </Box>
       <Divider />
       <Box className="categories">
-        {categories.map((category, idx) => <Link className="category" key={category.id} to={'/categories/' + category.id}>{category.name}</Link>)}
+        {categories.map((category, idx) => <Link className={`category ${category.id === activeCategoryId ? 'active' : ''}`} key={category.id} to={'/categories/' + category.id}>{category.name}</Link>)}
       </Box>
 
     </StyledMobileSideBar>

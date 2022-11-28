@@ -22,6 +22,9 @@ function App() {
         default: '#edebeb',
         paper: '#fff'
       },
+    primary: {
+      main: '#E85A4F'
+    },
 
     },
     typography: {
