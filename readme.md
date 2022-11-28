@@ -4,8 +4,8 @@
 
 # Screenshot
 
-![](./public.images/Homepage.PNG)
-![](./public.images/Productspage.PNG)
+![](./public/images/Homepage.PNG)
+![](./public/images/Productspage.PNG)
 
 
 # The website
@@ -21,6 +21,7 @@ Users should be able to:
 # Built with
 
 -REACT
+-TYPESCRIPT
 -REDUX
 -MUI
 -API
